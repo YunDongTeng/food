@@ -21,7 +21,7 @@ public class Order {
     private Integer orderStatus;
     private Integer payStatus;
 
-    private Date craeteTime;
+    private Date craeteTime2;
 
 
 }
