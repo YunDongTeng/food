@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 
 public class ProductInfoVO {
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("name")
     private String productName;
-
-    @JsonProperty("type")
-    private String productType;
 
     @JsonProperty("price")
     private BigDecimal productPrice;
@@ -21,20 +21,20 @@ public class ProductInfoVO {
     @JsonProperty("description")
     private String productDesc;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getProductName() {
         return productName;
     }
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType;
     }
 
     public BigDecimal getProductPrice() {
