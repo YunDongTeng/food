@@ -21,8 +21,8 @@ public class Order {
     private Integer orderStatus;
     private Integer payStatus;
 
-    private Date createTime;
-    private Date updatTime;
+    private Date craeteTime;
+    private Date updateTime;
 
     public String getOrderId() {
         return orderId;
@@ -88,19 +88,19 @@ public class Order {
         this.payStatus = payStatus;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getCraeteTime() {
+        return craeteTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCraeteTime(Date craeteTime) {
+        this.craeteTime = craeteTime;
     }
 
-    public Date getUpdatTime() {
-        return updatTime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatTime(Date updatTime) {
-        this.updatTime = updatTime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
