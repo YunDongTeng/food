@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity
-@DynamicUpdate
+
 public class Order {
 
 
@@ -21,7 +20,7 @@ public class Order {
     private Integer orderStatus;
     private Integer payStatus;
 
-    private Date craeteTime;
+    private Date createTime;
     private Date updateTime;
 
     public String getOrderId() {
@@ -88,12 +87,12 @@ public class Order {
         this.payStatus = payStatus;
     }
 
-    public Date getCraeteTime() {
-        return craeteTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCraeteTime(Date craeteTime) {
-        this.craeteTime = craeteTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {
