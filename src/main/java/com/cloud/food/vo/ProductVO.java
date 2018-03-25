@@ -8,7 +8,7 @@ import java.util.List;
 public class ProductVO {
 
 
-    @JsonProperty("categoryName")
+    @JsonProperty("name")
     private String categoryName;
 
     @JsonProperty("type")
