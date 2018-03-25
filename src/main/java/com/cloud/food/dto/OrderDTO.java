@@ -1,17 +1,13 @@
-package com.cloud.food.entity;
+package com.cloud.food.dto;
 
 
-import org.hibernate.annotations.DynamicUpdate;
+import com.cloud.food.entity.OrderDetail;
 
-import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-
-@Entity
-@DynamicUpdate
-public class Order {
-
+public class OrderDTO {
 
     private String orderId;
     private String buyerName;
@@ -25,6 +21,11 @@ public class Order {
     private Date createTime;
     private Date updateTime;
 
+    private List<OrderDetail> detailList;
+
+    public String getOrderId() {
+        return orderId;
+    }
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -100,5 +101,13 @@ public class Order {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public List<OrderDetail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<OrderDetail> detailList) {
+        this.detailList = detailList;
     }
 }

@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50721
+Source Server Version : 50717
 Source Host           : localhost:3306
 Source Database       : food
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2018-03-23 17:43:03
+Date: 2018-03-25 21:17:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,6 +44,7 @@ CREATE TABLE `order` (
 DROP TABLE IF EXISTS `order_detail`;
 CREATE TABLE `order_detail` (
   `detail_id` varchar(32) NOT NULL,
+  `order_id` varchar(32) NOT NULL,
   `product_id` varchar(32) NOT NULL COMMENT '商品id',
   `product_name` varchar(64) NOT NULL COMMENT '商品名称',
   `product_price` decimal(8,2) NOT NULL COMMENT '商品价格',
