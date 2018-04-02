@@ -11,8 +11,5 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order,String> {
 
-    List<Order> findByBuyerOpenid(String openId, PageRequest pageRequest);
-
-
-
+    List<Order> findAllByBuyerOpenid(String openId,PageRequest pageRequest);
 }

@@ -1,5 +1,6 @@
 package com.cloud.food.service;
 
+import com.cloud.food.dto.ShopCartDTO;
 import com.cloud.food.entity.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,8 @@ public interface ProductInfoService {
 
     //加库存
 
-    //减库存
 
+    //减库存
+    void decrStock(List<ShopCartDTO> list);
 
 }

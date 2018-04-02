@@ -24,7 +24,7 @@ public class ResultVO<T> {
         return new ResultVO<T>(0,"返回成功",data);
     }
 
-    public <T> ResultVO<T> error(Integer code,String msg){
+    public static <T> ResultVO<T> error(Integer code,String msg){
         return new ResultVO<T>(code,msg);
     }
 
