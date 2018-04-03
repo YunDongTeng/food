@@ -1,6 +1,9 @@
 package com.cloud.food.service.impl;
 
 import com.cloud.food.constant.ExceptionEnum;
+import com.cloud.food.constant.OrderStatusEnum;
+import com.cloud.food.constant.PayStatusEnum;
+import com.cloud.food.convert.Order2DTOConvert;
 import com.cloud.food.dto.OrderDTO;
 import com.cloud.food.dto.ShopCartDTO;
 import com.cloud.food.entity.Order;
@@ -16,6 +19,7 @@ import com.cloud.food.util.UUIDUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
         saveOrder.setOrderId(orderId);
         saveOrder.setOrderPrice(orderTotalFee);
         BeanUtils.copyProperties(order, saveOrder);
+        saveOrder.setOrderStatus(OrderStatusEnum.NOT_PAY.getCode());
+        saveOrder.setPayStatus(PayStatusEnum.NOT_PAY.getCode());
         orderRepository.save(saveOrder);
 
         //减库存
@@ -93,13 +99,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findOne(String id) {
-        return null;
+    public OrderDTO findOne(String id) {
+
+        Order order = orderRepository.getOne(id);
+
+        if (order == null) {
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+
+        List<OrderDetail> detailList = orderDetailRepository.findByOrderId(order.getOrderId());
+        if (detailList == null || detailList.size() == 0) {
+            throw new SellException(ExceptionEnum.ORDERDETAIL_NOT_EXIST);
+        }
+
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(order, orderDTO);
+        orderDTO.setDetailList(detailList);
+
+        return orderDTO;
     }
 
     @Override
     public Page<OrderDTO> findList(String buyerOpenId, Pageable pageable) {
-        return null;
+
+        Page<Order> orderList = orderRepository.findByBuyerOpenid(buyerOpenId, pageable);
+        List<OrderDTO> dtoList = Order2DTOConvert.convert(orderList.getContent());
+        Page<OrderDTO> result = new PageImpl<>(dtoList,pageable,dtoList.size());
+
+        return result;
     }
 
     @Override

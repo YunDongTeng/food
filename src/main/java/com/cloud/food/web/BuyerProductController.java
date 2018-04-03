@@ -53,7 +53,6 @@ public class BuyerProductController {
                 ProductInfoVO productInfoVO = null;
                 if (productInfo.getCategoryType().equals(productCategory.getCategoryType())) {
                     productInfoVO = new ProductInfoVO();
-                  //  BeanUtils.copyProperties(productInfo, productInfoVO);
                     productInfoVO.setId(productInfo.getProductId());
                     productInfoVO.setProductName(productInfo.getProductName());
                     productInfoVO.setProductImg(productInfo.getProductImg());

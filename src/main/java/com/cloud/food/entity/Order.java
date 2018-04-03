@@ -32,6 +32,10 @@ public class Order {
         this.orderId = orderId;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
     public String getBuyerName() {
         return buyerName;
     }

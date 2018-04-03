@@ -1,20 +1,14 @@
 package com.cloud.food.constant;
 
-public enum ExceptionEnum {
+public enum PayStatusEnum {
 
+    NOT_PAY(1,"未支付"),
+    HAS_PAY(2,"已支付");
 
-    PRODUCT_NOT_EXIST(401, "商品不存在"),
+    private int code;
+    private String msg;
 
-    PRODUCT_STOCK_NOT_ENOUGH(402, "商品库存不足"),
-
-    ORDER_NOT_EXIST(404, "订单不存在"),
-
-    ORDERDETAIL_NOT_EXIST(405, "订单详情不存在");
-
-    int code;
-    String msg;
-
-    ExceptionEnum(int code, String msg) {
+    PayStatusEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
