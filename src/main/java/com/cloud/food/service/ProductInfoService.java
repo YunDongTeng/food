@@ -21,7 +21,7 @@ public interface ProductInfoService {
 
 
     //加库存
-
+    void incrStock(List<ShopCartDTO> list);
 
     //减库存
     void decrStock(List<ShopCartDTO> list);

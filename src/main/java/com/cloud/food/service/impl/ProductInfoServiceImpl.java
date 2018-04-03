@@ -31,7 +31,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public ProductInfo save(ProductInfo productInfo) {
-
         productInfo.setProductId(UUIDUtils.uuid());
         return repository.save(productInfo);
     }
@@ -65,6 +64,19 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             productInfo.setProductStock(result);
             repository.save(productInfo);
         });
+    }
 
+    @Override
+    public void incrStock(List<ShopCartDTO> list) {
+        list.stream().forEach(e -> {
+            ProductInfo productInfo = repository.getOne(e.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ExceptionEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = productInfo.getProductStock() + e.getProductAmount();
+
+            productInfo.setProductStock(result);
+            repository.save(productInfo);
+        });
     }
 }

@@ -16,6 +16,8 @@ import com.cloud.food.repository.ProductInfoRepository;
 import com.cloud.food.service.OrderService;
 import com.cloud.food.service.ProductInfoService;
 import com.cloud.food.util.UUIDUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +37,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     private OrderRepository orderRepository;
@@ -43,7 +49,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-
     @Autowired
     private ProductInfoService productInfoService;
 
@@ -52,8 +57,6 @@ public class OrderServiceImpl implements OrderService {
     public Order save(OrderDTO order) {
 
         List<OrderDetail> detailList = order.getDetailList();
-
-
         String orderId = UUIDUtils.uuid();
 
         BigDecimal orderTotalFee = new BigDecimal(0);
@@ -64,10 +67,8 @@ public class OrderServiceImpl implements OrderService {
             if (productInfo == null) {
                 throw new SellException(ExceptionEnum.PRODUCT_NOT_EXIST);
             }
-
             //计算总价
             orderTotalFee = productInfo.getProductPrice().multiply(new BigDecimal(detail.getProductAmount())).add(orderTotalFee);
-
             detail.setOrderId(orderId);
             detail.setDetailId(UUIDUtils.uuid());
             detail.setProductName(productInfo.getProductName());
@@ -75,7 +76,6 @@ public class OrderServiceImpl implements OrderService {
             detail.setProductImg(productInfo.getProductImg());
             //写入订单详情
             orderDetailRepository.save(detail);
-
         }
 
         //写入订单信息
@@ -88,7 +88,6 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(saveOrder);
 
         //减库存
-
         List<ShopCartDTO> cartList = new ArrayList<>();
         detailList.stream().forEach(e -> {
             cartList.add(new ShopCartDTO(e.getProductId(), e.getProductAmount()));
@@ -124,23 +123,123 @@ public class OrderServiceImpl implements OrderService {
 
         Page<Order> orderList = orderRepository.findByBuyerOpenid(buyerOpenId, pageable);
         List<OrderDTO> dtoList = Order2DTOConvert.convert(orderList.getContent());
-        Page<OrderDTO> result = new PageImpl<>(dtoList,pageable,dtoList.size());
+        Page<OrderDTO> result = new PageImpl<>(dtoList, pageable, dtoList.size());
+
+        return result;
+    }
+
+    @Transactional
+    @Override
+    public Order cancelOrder(Order order) {
+
+        if (order == null) {
+            logger.error("【订单取消】:订单不存在");
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+        //判断订单状态
+        Order existOrder = orderRepository.getOne(order.getOrderId());
+        if (existOrder == null) {
+            logger.error("【订单取消】订单不存在：" + order.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+        if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_CANCEL)
+                || existOrder.getOrderStatus().equals(OrderStatusEnum.NOT_EVAL)
+                || existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_FINISH)) {
+            throw new SellException(ExceptionEnum.ORDER_NOT_CANCEL);
+        }
+
+        //修改状态
+        existOrder.setOrderStatus(OrderStatusEnum.HAS_CANCEL.getCode());
+        Order result = orderRepository.save(existOrder);
+        if (result == null) {
+            logger.error("【订单取消】订单修改状态失败:" + existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_CANCEL_FAIL);
+        }
+
+
+        //返回库存
+        List<OrderDetail> detailList = orderDetailRepository.findByOrderId(order.getOrderId());
+        if (CollectionUtils.isEmpty(detailList)) {
+            logger.error("【订单取消】该订单没有订单详情:" + existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_NO_DETAIL);
+        }
+        List<ShopCartDTO> cartList = new ArrayList<>();
+        detailList.stream().forEach(e -> {
+            cartList.add(new ShopCartDTO(e.getProductId(), e.getProductAmount()));
+        });
+        productInfoService.incrStock(cartList);
+
+        //如果已经支付，退款
+        if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_PAY) && existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)) {
+            //TODO
+
+        }
 
         return result;
     }
 
     @Override
-    public Order cancelOrder(Order order) {
-        return null;
-    }
-
-    @Override
     public Order finishOrder(Order order) {
-        return null;
+
+        if (order == null) {
+            logger.error("【订单完成】:订单不存在");
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+
+        Order existOrder = orderRepository.getOne(order.getOrderId());
+        //判断订单状态
+        if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_FINISH)
+                || existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_CANCEL)
+                || existOrder.getOrderStatus().equals(OrderStatusEnum.NOT_PAY)) {
+            logger.error("【订单完成】:订单状态错误，修改失败");
+
+            throw new SellException(ExceptionEnum.ORDER_NOT_FINISH);
+        }
+
+        //修改订单状态
+        existOrder.setOrderStatus(OrderStatusEnum.HAS_FINISH.getCode());
+        Order result = orderRepository.save(existOrder);
+        if (result == null) {
+            logger.error("【订单完成】订单修改状态失败:" + existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_FINISH_FAIL);
+        }
+
+        return result;
     }
 
     @Override
     public Order payOrder(Order order) {
-        return null;
+
+        if (order == null) {
+            logger.error("【修改订单支付状态】:订单不存在");
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+
+        Order existOrder = orderRepository.getOne(order.getOrderId());
+        if (existOrder == null) {
+            logger.error("【修改订单支付状态】:订单不存在");
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+        //判断订单状态
+        if (!existOrder.getOrderStatus().equals(OrderStatusEnum.NOT_PAY)) {
+            logger.error("【修改订单支付状态】:订单状态错误，不可修改支付:"+existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_NOT_PAY);
+        }
+        //判断支付状态
+        if(existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)){
+            logger.error("【修改订单支付状态】:订单已经支付:"+existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_HAS_PAY);
+        }
+        //修改订单状态
+        existOrder.setOrderStatus(OrderStatusEnum.HAS_PAY.getCode());
+
+        Order result = orderRepository.save(existOrder);
+
+        if(order ==null){
+            logger.error("【修改订单支付状态】:订单修改支付状态失败:"+existOrder.getOrderId());
+            throw new SellException(ExceptionEnum.ORDER_PAYSTATUS_FAIL);
+        }
+
+        return result;
     }
 }
