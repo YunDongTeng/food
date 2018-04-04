@@ -2,14 +2,14 @@ package com.cloud.food.service;
 
 
 import com.cloud.food.dto.OrderDTO;
-import com.cloud.food.entity.Order;
+import com.cloud.food.entity.OrderMaster;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
 
     /**创建订单**/
-    Order save(OrderDTO order);
+    OrderMaster save(OrderDTO order);
 
     /**查询单个订单**/
     OrderDTO findOne(String id);
@@ -18,11 +18,11 @@ public interface OrderService {
     Page<OrderDTO> findList(String buyerOpenId, Pageable pageable);
 
     /**取消订单**/
-   Order cancelOrder(Order order);
+    OrderMaster cancelOrder(OrderMaster order);
 
     /**完结订单**/
-    Order finishOrder(Order order);
+    OrderMaster finishOrder(OrderMaster order);
 
     /**支付订单**/
-    Order payOrder(Order order);
+    OrderMaster payOrder(OrderMaster order);
 }

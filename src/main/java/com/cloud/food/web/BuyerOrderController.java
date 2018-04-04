@@ -4,7 +4,7 @@ package com.cloud.food.web;
 import com.cloud.food.constant.ExceptionEnum;
 import com.cloud.food.convert.OrderForm2DTOConvert;
 import com.cloud.food.dto.OrderDTO;
-import com.cloud.food.entity.Order;
+import com.cloud.food.entity.OrderMaster;
 import com.cloud.food.exception.SellException;
 import com.cloud.food.form.OrderForm;
 import com.cloud.food.service.OrderService;
@@ -48,7 +48,7 @@ public class BuyerOrderController {
             throw new SellException(ExceptionEnum.ORDERDETAIL_NOT_EXIST);
         }
 
-        Order order = orderService.save(orderDTO);
+        OrderMaster order = orderService.save(orderDTO);
         Map<String, String> resultMap = new HashMap<String, String>();
         resultMap.put("orderId", order.getOrderId());
 

@@ -79,4 +79,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             repository.save(productInfo);
         });
     }
+
+    @Override
+    public ProductInfo getOne(String id) {
+        return repository.getOne(id);
+    }
 }

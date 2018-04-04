@@ -1,7 +1,6 @@
 package com.cloud.food.convert;
 
 import com.cloud.food.dto.OrderDTO;
-import com.cloud.food.entity.Order;
 import com.cloud.food.entity.OrderDetail;
 import com.cloud.food.form.OrderForm;
 import com.google.gson.Gson;

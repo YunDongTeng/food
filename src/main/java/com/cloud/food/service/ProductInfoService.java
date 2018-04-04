@@ -15,6 +15,7 @@ public interface ProductInfoService {
 
     Page<ProductInfo> findAll(Pageable pageable);
 
+    ProductInfo getOne(String id);
 
     //查询所有上架的商品
     List<ProductInfo> findUpAll();

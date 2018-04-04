@@ -1,6 +1,6 @@
 package com.cloud.food.repository;
 
-import com.cloud.food.entity.Order;
+import com.cloud.food.entity.OrderMaster;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +11,8 @@ import java.util.List;
 
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order,String> {
+public interface OrderRepository extends JpaRepository<OrderMaster,String> {
 
-    Page<Order> findByBuyerOpenid(String openId, Pageable pageable);
+    Page<OrderMaster> findByBuyerOpenid(String openId, Pageable pageable);
 
 }
