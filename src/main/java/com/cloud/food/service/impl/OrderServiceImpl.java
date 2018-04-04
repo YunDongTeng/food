@@ -134,16 +134,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderMaster cancelOrder(OrderMaster order) {
+    public OrderMaster cancelOrder(OrderDTO orderDTO) {
 
-        if (order == null) {
+        if (orderDTO == null) {
             logger.error("【订单取消】:订单不存在");
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
         }
         //判断订单状态
-        OrderMaster existOrder = orderRepository.getOne(order.getOrderId());
+        OrderMaster existOrder = orderRepository.getOne(orderDTO.getOrderId());
         if (existOrder == null) {
-            logger.error("【订单取消】订单不存在：" + order.getOrderId());
+            logger.error("【订单取消】订单不存在：" + orderDTO.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
         }
         if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_CANCEL)
@@ -162,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
 
 
         //返回库存
-        List<OrderDetail> detailList = orderDetailRepository.findByOrderId(order.getOrderId());
+        List<OrderDetail> detailList = orderDetailRepository.findByOrderId(orderDTO.getOrderId());
         if (CollectionUtils.isEmpty(detailList)) {
             logger.error("【订单取消】该订单没有订单详情:" + existOrder.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_NO_DETAIL);
@@ -183,14 +183,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderMaster finishOrder(OrderMaster order) {
+    public OrderMaster finishOrder(OrderDTO orderDTO) {
 
-        if (order == null) {
+        if (orderDTO == null) {
             logger.error("【订单完成】:订单不存在");
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
         }
 
-        OrderMaster existOrder = orderRepository.getOne(order.getOrderId());
+        OrderMaster existOrder = orderRepository.getOne(orderDTO.getOrderId());
         //判断订单状态
         if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_FINISH)
                 || existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_CANCEL)
@@ -212,14 +212,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderMaster payOrder(OrderMaster order) {
+    public OrderMaster payOrder(OrderDTO orderDTO) {
 
-        if (order == null) {
+        if (orderDTO == null) {
             logger.error("【修改订单支付状态】:订单不存在");
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
         }
 
-        OrderMaster existOrder = orderRepository.getOne(order.getOrderId());
+        OrderMaster existOrder = orderRepository.getOne(orderDTO.getOrderId());
         if (existOrder == null) {
             logger.error("【修改订单支付状态】:订单不存在");
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
@@ -239,7 +239,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderMaster result = orderRepository.save(existOrder);
 
-        if(order ==null){
+        if(orderDTO ==null){
             logger.error("【修改订单支付状态】:订单修改支付状态失败:"+existOrder.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_PAYSTATUS_FAIL);
         }

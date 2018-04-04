@@ -18,11 +18,11 @@ public interface OrderService {
     Page<OrderDTO> findList(String buyerOpenId, Pageable pageable);
 
     /**取消订单**/
-    OrderMaster cancelOrder(OrderMaster order);
+    OrderMaster cancelOrder(OrderDTO orderDTO);
 
     /**完结订单**/
-    OrderMaster finishOrder(OrderMaster order);
+    OrderMaster finishOrder(OrderDTO orderDTO);
 
     /**支付订单**/
-    OrderMaster payOrder(OrderMaster order);
+    OrderMaster payOrder(OrderDTO orderDTO);
 }

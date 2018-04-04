@@ -1,6 +1,8 @@
 package com.cloud.food.entity;
 
 
+import com.cloud.food.util.Date2LongSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
@@ -20,7 +22,10 @@ public class OrderDetail {
     private BigDecimal productPrice;
     private Integer productAmount;
     private String productImg;
+
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
     public OrderDetail(String detailId, String productId, String productName, BigDecimal productPrice, Integer productAmount, String productImg, Date createTime, Date updateTime) {

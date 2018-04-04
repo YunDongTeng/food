@@ -2,11 +2,17 @@ package com.cloud.food.dto;
 
 
 import com.cloud.food.entity.OrderDetail;
+import com.cloud.food.util.Date2LongSerializer;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+
+/*@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)*/
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderDTO {
 
     private String orderId;
@@ -14,11 +20,13 @@ public class OrderDTO {
     private String buyerPhone;
     private String buyerAddress;
     private String buyerOpenid;
-    private BigDecimal orderPrice;
+    private BigDecimal orderAmount;
     private Integer orderStatus;
     private Integer payStatus;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
     private List<OrderDetail> detailList;
@@ -63,12 +71,12 @@ public class OrderDTO {
         this.buyerOpenid = buyerOpenid;
     }
 
-    public BigDecimal getOrderPrice() {
-        return orderPrice;
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
     }
 
-    public void setOrderPrice(BigDecimal orderPrice) {
-        this.orderPrice = orderPrice;
+    public void setOrderAmount(BigDecimal orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
     public Integer getOrderStatus() {
