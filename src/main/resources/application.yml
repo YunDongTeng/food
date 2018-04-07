@@ -10,3 +10,7 @@ spring:
     password: 123456
   jpa:
     show-sql: true
+
+wechat:
+    appId: wxb4c7e9de3db7fe7a
+    appSecret: 7b19e866f0c2b228e8a21ce2077472e4
