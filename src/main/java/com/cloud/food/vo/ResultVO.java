@@ -24,7 +24,7 @@ public class ResultVO<T> {
     private T data;
 
     public static <T> ResultVO<T> success(T data) {
-        return new ResultVO<T>(200, "返回成功", data);
+        return new ResultVO<T>(0, "返回成功", data);
     }
 
     public static ResultVO success() {
