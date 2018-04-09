@@ -1,6 +1,7 @@
 package com.cloud.food.entity;
 
 
+import com.cloud.food.constant.ProductStatusEnum;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
@@ -19,7 +20,7 @@ public class ProductInfo {
     private Integer productStock;
     private String productDesc;
     private String productImg;
-    private Integer productStatus;  // 0-正常 1-下架
+    private Integer productStatus = ProductStatusEnum.UP.getCode();  // 0-正常 1-下架
     private String categoryType;
     private Date createTime;
     private Date updateTime;

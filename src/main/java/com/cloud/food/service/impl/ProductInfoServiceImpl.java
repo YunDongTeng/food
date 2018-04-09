@@ -1,7 +1,10 @@
 package com.cloud.food.service.impl;
 
+import com.cloud.food.constant.ExceptionEnum;
 import com.cloud.food.constant.ProductStatusEnum;
+import com.cloud.food.dto.ShopCartDTO;
 import com.cloud.food.entity.ProductInfo;
+import com.cloud.food.exception.SellException;
 import com.cloud.food.repository.ProductInfoRepository;
 import com.cloud.food.service.ProductInfoService;
 import com.cloud.food.util.UUIDUtils;
@@ -11,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.cloud.food.constant.ExceptionEnum.PRODUCT_STOCK_NOT_ENOUGH;
 
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
@@ -26,12 +31,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public ProductInfo save(ProductInfo productInfo) {
-
         productInfo.setProductId(UUIDUtils.uuid());
-
-        //默认上架
-        productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
-
         return repository.save(productInfo);
     }
 
@@ -42,10 +42,46 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     /**
      * 查询所有上架的商品
+     *
      * @return
      */
     @Override
     public List<ProductInfo> findUpAll() {
         return repository.findByProductStatus(ProductStatusEnum.UP.getCode());
+    }
+
+    @Override
+    public void decrStock(List<ShopCartDTO> list) {
+        list.stream().forEach(e -> {
+            ProductInfo productInfo = repository.getOne(e.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ExceptionEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = productInfo.getProductStock() - e.getProductAmount();
+            if (result < 0) {
+                throw new SellException(PRODUCT_STOCK_NOT_ENOUGH);
+            }
+            productInfo.setProductStock(result);
+            repository.save(productInfo);
+        });
+    }
+
+    @Override
+    public void incrStock(List<ShopCartDTO> list) {
+        list.stream().forEach(e -> {
+            ProductInfo productInfo = repository.getOne(e.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ExceptionEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = productInfo.getProductStock() + e.getProductAmount();
+
+            productInfo.setProductStock(result);
+            repository.save(productInfo);
+        });
+    }
+
+    @Override
+    public ProductInfo getOne(String id) {
+        return repository.getOne(id);
     }
 }

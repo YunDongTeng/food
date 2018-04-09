@@ -1,26 +1,50 @@
 package com.cloud.food.entity;
 
 
+import com.cloud.food.constant.OrderStatusEnum;
+import com.cloud.food.constant.PayStatusEnum;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 
 
-public class Order {
+@Entity
+@DynamicUpdate
+public class OrderMaster {
 
-
+    /** 订单id. */
+    @Id
     private String orderId;
-    private String buyerName;
-    private String buyerPhone;
-    private String buyerAddress;
-    private String buyerOpenid;
-    private BigDecimal orderPrice;
-    private Integer orderStatus;
-    private Integer payStatus;
 
+    /** 买家名字. */
+    private String buyerName;
+
+    /** 买家手机号. */
+    private String buyerPhone;
+
+    /** 买家地址. */
+    private String buyerAddress;
+
+    /** 买家微信Openid. */
+    private String buyerOpenid;
+
+    /** 订单总金额. */
+    private BigDecimal orderAmount;
+
+    /** 订单状态, 默认为0新下单. */
+    private Integer orderStatus = OrderStatusEnum.NOT_PAY.getCode();
+
+    /** 支付状态, 默认为0未支付. */
+    private Integer payStatus = PayStatusEnum.NOT_PAY.getCode();
+
+    /** 创建时间. */
     private Date createTime;
+
+    /** 更新时间. */
     private Date updateTime;
 
     public String getOrderId() {
@@ -63,12 +87,12 @@ public class Order {
         this.buyerOpenid = buyerOpenid;
     }
 
-    public BigDecimal getOrderPrice() {
-        return orderPrice;
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
     }
 
-    public void setOrderPrice(BigDecimal orderPrice) {
-        this.orderPrice = orderPrice;
+    public void setOrderAmount(BigDecimal orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
     public Integer getOrderStatus() {

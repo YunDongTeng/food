@@ -1,9 +1,9 @@
-
-
 server:
-  port: 8085
+  port: 80
   servlet:
     context-path: /sell
+
+
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/food?useUnicode=true&characterEncoding=utf8
@@ -12,3 +12,7 @@ spring:
     password: 123456
   jpa:
     show-sql: true
+
+wechat:
+    appId: wxb4c7e9de3db7fe7a
+    appSecret: 7b19e866f0c2b228e8a21ce2077472e4

@@ -1,7 +1,10 @@
 package com.cloud.food.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.Entity;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultVO<T> {
 
 
@@ -20,15 +23,23 @@ public class ResultVO<T> {
      */
     private T data;
 
-    public static <T> ResultVO<T> success(T data){
-        return new ResultVO<T>(0,"返回成功",data);
+    public static <T> ResultVO<T> success(T data) {
+        return new ResultVO<T>(0, "返回成功", data);
     }
 
-    public <T> ResultVO<T> error(Integer code,String msg){
-        return new ResultVO<T>(code,msg);
+    public static ResultVO success() {
+        return new ResultVO(200, "操作成功");
     }
 
-    public ResultVO(Integer code,String msg){
+    public static ResultVO fail(){
+        return new ResultVO(500,"操作失败");
+    }
+
+    public static <T> ResultVO<T> error(Integer code, String msg) {
+        return new ResultVO<T>(code, msg);
+    }
+
+    public ResultVO(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }
