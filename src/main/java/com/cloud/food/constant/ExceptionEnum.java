@@ -25,8 +25,8 @@ public enum ExceptionEnum {
     ORDER_HAS_PAY(412, "订单已经支付"),
     OPENID_NOT_EMPTY(414, "openid不能为空"),
     ORDERID_NOT_EMPTY(415, "orderId不能为空"),
-    ORDER_NOT_OWN(416, "当前订单不属于该用户");
-
+    ORDER_NOT_OWN(416, "当前订单不属于该用户"),
+    ORDERFEE_NOT_EQ_PAY(417, "订单金额与支付金额不一致");
     int code;
     String msg;
 

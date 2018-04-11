@@ -14,6 +14,7 @@ import com.cloud.food.repository.OrderDetailRepository;
 import com.cloud.food.repository.OrderRepository;
 import com.cloud.food.repository.ProductInfoRepository;
 import com.cloud.food.service.OrderService;
+import com.cloud.food.service.PayService;
 import com.cloud.food.service.ProductInfoService;
 import com.cloud.food.util.UUIDUtils;
 import org.slf4j.Logger;
@@ -48,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductInfoService productInfoService;
+
+    @Autowired
+    private PayService payService;
 
     @Transactional
     @Override
@@ -175,8 +179,7 @@ public class OrderServiceImpl implements OrderService {
 
         //如果已经支付，退款
         if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_PAY) && existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)) {
-            //TODO
-
+            payService.refund(existOrder.getOrderId(),"");
         }
 
         return result;
@@ -211,6 +214,7 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    //修改订单支付状态
     @Override
     public OrderMaster payOrder(OrderDTO orderDTO) {
 
