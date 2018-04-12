@@ -16,6 +16,16 @@ public enum OrderStatusEnum {
         this.msg = msg;
     }
 
+    public static OrderStatusEnum getOrderStatuEnum(Integer code) {
+
+        for (OrderStatusEnum orderStatusEnum : OrderStatusEnum.values()) {
+            if (orderStatusEnum.getCode() == code) {
+                return orderStatusEnum;
+            }
+        }
+        return null;
+    }
+
     public int getCode() {
         return code;
     }

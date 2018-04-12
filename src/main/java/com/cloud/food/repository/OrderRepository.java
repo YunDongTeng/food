@@ -15,4 +15,5 @@ public interface OrderRepository extends JpaRepository<OrderMaster,String> {
 
     Page<OrderMaster> findByBuyerOpenid(String openId, Pageable pageable);
 
+   // Page<OrderMaster> findAll(OrderMaster orderMaster);
 }

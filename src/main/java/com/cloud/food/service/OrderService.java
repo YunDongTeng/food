@@ -17,6 +17,9 @@ public interface OrderService {
     /**查询订单列表**/
     Page<OrderDTO> findList(String buyerOpenId, Pageable pageable);
 
+    /****查询订单列表(后台)*****/
+    Page<OrderDTO> findList(Pageable pageable);
+
     /**取消订单**/
     OrderMaster cancelOrder(OrderDTO orderDTO);
 
@@ -25,4 +28,6 @@ public interface OrderService {
 
     /**支付订单**/
     OrderMaster payOrder(OrderDTO orderDTO);
+
+
 }

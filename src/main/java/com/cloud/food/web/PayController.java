@@ -99,8 +99,7 @@ public class PayController {
 
     @GetMapping("/refundNotify")
     public ModelAndView refundNotify(@RequestParam("notifyData")String notifyData){
-
-
+        payService.refundNotify(notifyData);
         return new ModelAndView("/notifyData");
     }
 

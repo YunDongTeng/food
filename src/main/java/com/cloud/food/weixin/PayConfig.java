@@ -13,7 +13,7 @@ public class PayConfig implements WXPayConfig {
     private String appId = "";
     private String mchId = "";
     private String key = "";
-    private String certPath = "/root/";
+    private String certPath = "";
     private Integer httpConnectionTimeoutMs = 8000;  //单位：ms
     private Integer httpReadTimeMs = 10000;  //单位：ms
     private byte[] certBytes;

@@ -1,6 +1,8 @@
 package com.cloud.food.dto;
 
 
+import com.cloud.food.constant.OrderStatusEnum;
+import com.cloud.food.constant.PayStatusEnum;
 import com.cloud.food.entity.OrderDetail;
 import com.cloud.food.util.Date2LongSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,12 +24,17 @@ public class OrderDTO {
     private String buyerOpenid;
     private BigDecimal orderAmount;
     private Integer orderStatus;
+
     private Integer payStatus;
 
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
+
+    private OrderStatusEnum orderStatusEnum;
+
+    private PayStatusEnum payStatusEnum;
 
     private List<OrderDetail> detailList;
 
@@ -117,5 +124,21 @@ public class OrderDTO {
 
     public void setDetailList(List<OrderDetail> detailList) {
         this.detailList = detailList;
+    }
+
+    public OrderStatusEnum getOrderStatusEnum() {
+        return orderStatusEnum;
+    }
+
+    public void setOrderStatusEnum(OrderStatusEnum orderStatusEnum) {
+        this.orderStatusEnum = orderStatusEnum;
+    }
+
+    public PayStatusEnum getPayStatusEnum() {
+        return payStatusEnum;
+    }
+
+    public void setPayStatusEnum(PayStatusEnum payStatusEnum) {
+        this.payStatusEnum = payStatusEnum;
     }
 }

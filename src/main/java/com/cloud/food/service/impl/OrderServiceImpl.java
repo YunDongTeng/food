@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
         saveOrder.setCreateTime(now);
         saveOrder.setUpdateTime(now);
 
-       orderRepository.save(saveOrder);
+        orderRepository.save(saveOrder);
 
         //减库存
         List<ShopCartDTO> cartList = new ArrayList<>();
@@ -179,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
 
         //如果已经支付，退款
         if (existOrder.getOrderStatus().equals(OrderStatusEnum.HAS_PAY) && existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)) {
-            payService.refund(existOrder.getOrderId(),"");
+            payService.refund(existOrder.getOrderId(), "");
         }
 
         return result;
@@ -230,12 +230,12 @@ public class OrderServiceImpl implements OrderService {
         }
         //判断订单状态
         if (!existOrder.getOrderStatus().equals(OrderStatusEnum.NOT_PAY)) {
-            logger.error("【修改订单支付状态】:订单状态错误，不可修改支付:"+existOrder.getOrderId());
+            logger.error("【修改订单支付状态】:订单状态错误，不可修改支付:" + existOrder.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_NOT_PAY);
         }
         //判断支付状态
-        if(existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)){
-            logger.error("【修改订单支付状态】:订单已经支付:"+existOrder.getOrderId());
+        if (existOrder.getPayStatus().equals(PayStatusEnum.HAS_PAY)) {
+            logger.error("【修改订单支付状态】:订单已经支付:" + existOrder.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_HAS_PAY);
         }
         //修改订单状态
@@ -243,10 +243,27 @@ public class OrderServiceImpl implements OrderService {
 
         OrderMaster result = orderRepository.save(existOrder);
 
-        if(orderDTO ==null){
-            logger.error("【修改订单支付状态】:订单修改支付状态失败:"+existOrder.getOrderId());
+        if (orderDTO == null) {
+            logger.error("【修改订单支付状态】:订单修改支付状态失败:" + existOrder.getOrderId());
             throw new SellException(ExceptionEnum.ORDER_PAYSTATUS_FAIL);
         }
+
+        return result;
+    }
+
+    @Override
+    public Page<OrderDTO> findList(Pageable pageable) {
+        Page<OrderMaster> orderList = orderRepository.findAll(pageable);
+
+        List<OrderDTO> dtoList = Order2DTOConvert.convert(orderList.getContent());
+
+        dtoList.stream().forEach(e -> {
+            e.setOrderStatusEnum(OrderStatusEnum.getOrderStatuEnum(e.getOrderStatus()));
+            e.setPayStatusEnum(PayStatusEnum.getPayStatusEnum(e.getPayStatus()));
+        });
+
+        Page<OrderDTO> result = new PageImpl<>(dtoList, pageable, orderList.getTotalElements()
+        );
 
         return result;
     }

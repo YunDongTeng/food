@@ -13,6 +13,15 @@ public enum PayStatusEnum {
         this.msg = msg;
     }
 
+    public static PayStatusEnum getPayStatusEnum(Integer code){
+        for(PayStatusEnum payStatusEnum:PayStatusEnum.values()){
+            if(payStatusEnum.getCode() == code){
+                return payStatusEnum;
+            }
+        }
+        return null;
+    }
+
     public int getCode() {
         return code;
     }
