@@ -23,6 +23,12 @@ public class OrderController {
     @Autowired
     public OrderService orderService;
 
+    /**
+     * 订单列表
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/list")
     public ModelAndView findList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                  @RequestParam(value = "size", defaultValue = "5") Integer size) {
@@ -37,6 +43,27 @@ public class OrderController {
         return new ModelAndView("admin/order/list", map);
     }
 
+    /**
+     * 订单详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/detail/{id}")
+    public ModelAndView detail(@PathVariable("id")String id){
+
+        OrderDTO orderDTO = orderService.findOne(id);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("order",orderDTO);
+
+        return new ModelAndView("admin/order/detail",map);
+    }
+
+    /**
+     * 取消订单
+     * @param orderId
+     * @return
+     */
     @PostMapping("/cancel")
     @ResponseBody
     public ResultVO cancel(@RequestParam("orderId") String orderId) {
@@ -44,7 +71,6 @@ public class OrderController {
         OrderDTO orderDTO = orderService.findOne(orderId);
 
         if(orderDTO==null){
-
             throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
         }
         orderService.cancelOrder(orderDTO);

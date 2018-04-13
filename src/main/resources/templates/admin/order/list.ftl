@@ -12,12 +12,15 @@
     function cancelOrder() {
         console.log($("#orderId").val());
         $.ajax({
-            url: '/seller/order/cancel',
+            url: '/sell/seller/order/cancel',
             type: 'POST',
             dataType: 'json',
+            data:{'orderId':$("#orderId").val()},
             success: function (data) {
-                if (data.code == '0') {
-                    $('#cancelModal').modal('hidden');
+
+                if (data.code == '200') {
+                    $('#cancelModal').modal('hide');
+                    location.href="/sell/seller/order/list?page=1&size=5"
                 }
             }
         })
@@ -57,11 +60,13 @@
                             <td>${orderDTO.orderStatusEnum.msg}</td>
                             <td>${orderDTO.payStatusEnum.msg}</td>
                             <td>${orderDTO.createTime}</td>
-                            <td><a href="#">详情</a></td>
+                            <td><a href="/sell/seller/order/detail/${orderDTO.orderId}">详情</a></td>
                                     <#if orderDTO.orderStatus lt 3>
                                         <td><a id="modal-972745" href="javascript:void(0)"
                                                onclick="showCancelModal('${orderDTO.orderId}')" role="button"
                                                class="btn" data-toggle="modal">取消</a></td>
+                                    <#else>
+                                        <td></td>
                                     </#if>
                         </tr>
                         </#list>
