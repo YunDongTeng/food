@@ -21,6 +21,8 @@
                 if (data.code == '200') {
                     $('#cancelModal').modal('hide');
                     location.href="/sell/seller/order/list?page=1&size=5"
+                }else{
+                    alert(data.msg);
                 }
             }
         })
@@ -75,46 +77,45 @@
 
                     </table>
 
-                    <ul class="pagination" style="float: right">
-                        <li>
-                            <a href="/sell/seller/order/list?page=1&size=5">首页</a>
-                        </li>
-                        <#if currentPage lte 1>
-                                  <li class="disabled">
-                                      <a href="/sell/seller/order/list?page=${currentPage-1}&size=5">上一页</a>
-                                  </li>
-                        <#else>
-                                 <li>
-                                     <a href="/sell/seller/order/list?page=${currentPage-1}&size=5">上一页</a>
-                                 </li>
-                        </#if>
-                        <#list 1..orderPageList.getTotalPages() as index>
-
-                            <#if currentPage == index>
-                                  <li class="disabled">
-                                      <a href="/sell/seller/order/list?page=${index}&size=5">${index}</a>
-                                  </li>
+                    <#if orderPageList.getTotalPages() gt 0>
+                        <ul class="pagination" style="float: right">
+                            <li>
+                                <a href="/sell/seller/order/list?page=1&size=5">首页</a>
+                            </li>
+                            <#if currentPage lte 1>
+                                <li class="disabled">
+                                    <a href="/sell/seller/order/list?page=${currentPage-1}&size=5">上一页</a>
+                                </li>
                             <#else>
-                                 <li>
-                                     <a href="/sell/seller/order/list?page=${index}&size=5">${index}</a>
-                                 </li>
+                                <li>
+                                    <a href="/sell/seller/order/list?page=${currentPage-1}&size=5">上一页</a>
+                                </li>
                             </#if>
-
-
-                        </#list>
-                         <#if currentPage gte orderPageList.getTotalPages()>
-                                  <li class="disabled">
-                                      <a href="/sell/seller/order/list?page=${currentPage+1}&size=5">下一页</a>
-                                  </li>
-                         <#else>
-                                 <li>
-                                     <a href="/sell/seller/order/list?page=${currentPage+1}&size=5">下一页</a>
-                                 </li>
-                         </#if>
-                        <li>
-                            <a href="/sell/seller/order/list?page=${orderPageList.getTotalPages()}&size=5">末页</a>
-                        </li>
-                    </ul>
+                            <#list 1..orderPageList.getTotalPages() as index>
+                                <#if currentPage == index>
+                                    <li class="disabled">
+                                        <a href="/sell/seller/order/list?page=${index}&size=5">${index}</a>
+                                    </li>
+                                <#else>
+                                    <li>
+                                        <a href="/sell/seller/order/list?page=${index}&size=5">${index}</a>
+                                    </li>
+                                </#if>
+                            </#list>
+                            <#if currentPage gte orderPageList.getTotalPages()>
+                                <li class="disabled">
+                                    <a href="/sell/seller/order/list?page=${currentPage+1}&size=5">下一页</a>
+                                </li>
+                            <#else>
+                                <li>
+                                    <a href="/sell/seller/order/list?page=${currentPage+1}&size=5">下一页</a>
+                                </li>
+                            </#if>
+                            <li>
+                                <a href="/sell/seller/order/list?page=${orderPageList.getTotalPages()}&size=5">末页</a>
+                            </li>
+                        </ul>
+                    </#if>
                 </div>
             </div>
 

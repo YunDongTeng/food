@@ -78,4 +78,24 @@ public class OrderController {
         return ResultVO.success();
     }
 
+    /**
+     *
+     * 完结订单
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/finish")
+    @ResponseBody
+    public ResultVO finish(@RequestParam("orderId")String orderId){
+
+        OrderDTO orderDTO = orderService.findOne(orderId);
+
+        if(orderDTO==null){
+            throw new SellException(ExceptionEnum.ORDER_NOT_EXIST);
+        }
+        orderService.finishOrder(orderDTO);
+
+        return ResultVO.success();
+    }
+
 }
