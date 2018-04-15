@@ -50,7 +50,7 @@
 </script>
 <body>
 
-</body>
+
 <div id="wrapper" class="toggled">
     <#include "../common/left.ftl">
     <div id="page-content-wrapper">
@@ -161,5 +161,5 @@
 
 
 </div>
-
+</body>
 </html>

@@ -20,12 +20,16 @@
 
                 if (data.code == '200') {
                     $('#cancelModal').modal('hide');
-                    location.href="/sell/seller/order/list?page=1&size=5"
+                    $("#resultModal").modal("show");
                 }else{
                     alert(data.msg);
                 }
             }
         })
+    }
+    
+    function toOrderList() {
+        location.href="/sell/seller/order/list?page=1&size=5"
     }
 </script>
 <body>
@@ -142,6 +146,19 @@
                 </div>
             </div>
 
+
+            <div class="modal fade" id="resultModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                           取消成功
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="toOrderList()">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>

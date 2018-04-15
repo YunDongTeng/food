@@ -2,6 +2,7 @@ package com.cloud.food.service;
 
 import com.cloud.food.dto.ShopCartDTO;
 import com.cloud.food.entity.ProductInfo;
+import com.cloud.food.vo.ProductMangeVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,7 @@ public interface ProductInfoService {
 
     ProductInfo save(ProductInfo productInfo);
 
-    Page<ProductInfo> findAll(Pageable pageable);
+    Page<ProductMangeVO> findAll(Pageable pageable);
 
     ProductInfo getOne(String id);
 
@@ -26,5 +27,8 @@ public interface ProductInfoService {
 
     //减库存
     void decrStock(List<ShopCartDTO> list);
+
+    //修改商品状态 上架和下架(state-0 上架  state-1下架)
+    void updateProductState(int state,String id);
 
 }
